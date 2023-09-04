@@ -1,0 +1,17 @@
+*.ply
+*.pt
+!test.ply
+.ipynb_checkpoints
+.idea
+lightning_logs/
+tensorboard_logs/
+logs/
+data/
+*.npz
+*.ipynb
+*.pyc
+experiment_config/
+*.stl
+*.obj
+*.exports
+
