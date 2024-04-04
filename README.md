@@ -46,7 +46,7 @@ docker build -t dilatedtoothsegnet .
 The Docker container can be started using the following command: <br>
 On **Windows**:
 ```cmd
-docker run -p 8888:8888 -e JUPYTER_TOKEN=12345 -d --gpus all -v "%cd%:/app" --name dilatedtoothsegnet dilatedtoothsegnet
+docker run -p 8888:8888 -p 6006:6006 -e JUPYTER_TOKEN=12345 -d --gpus all -v "%cd%:/app" --name dilatedtoothsegnet dilatedtoothsegnet
 ```
 On **Linux**:
 ```bash

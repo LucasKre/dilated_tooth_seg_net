@@ -203,7 +203,7 @@ class DilatedEdgeGraphConvBlock(nn.Module):
             nn.LeakyReLU(negative_slope=0.2)
         )
 
-    def forward(self, x, pos):
+    def forward(self, x, pos, cd=None):
         """
         Forward pass of the dilated edge graph convolution block.
 
@@ -212,6 +212,7 @@ class DilatedEdgeGraphConvBlock(nn.Module):
                 and C is the number of input channels.
             pos (torch.Tensor, optional): Position tensor of shape (B, N, D), where D is the number of dimensions.
                 Defaults to None.
+            cd (torch.Tensor, optional): Pairwise distance tensor of shape (B, N, N). Defaults to None.
 
         Returns:
             torch.Tensor: Output tensor of shape (B, N, out_channels), where out_channels is the number of output channels.
@@ -220,7 +221,8 @@ class DilatedEdgeGraphConvBlock(nn.Module):
         """
         x_t = x.transpose(2, 1)
         B, N, C = x.shape
-        cd = torch.cdist(pos, pos, p=2)
+        if cd is None:
+            cd = torch.cdist(pos, pos, p=2)
         dilation_k = min(self.dilation_k, N)
         idx_l = torch.topk(cd, dilation_k, largest=False)[1].reshape(B * N, -1)
         idx_fps = fps(pos.reshape(B * N, -1)[idx_l], self.k).long()

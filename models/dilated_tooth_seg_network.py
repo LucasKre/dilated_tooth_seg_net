@@ -49,6 +49,8 @@ class DilatedToothSegmentationNetwork(nn.Module):
         self.out = BasicPointLayer(in_channels=256, out_channels=num_classes, is_out=True)
 
     def forward(self, x, pos):
+        # precompute pairwise distance of points
+        cd = torch.cdist(pos, pos)
         x = self.stnkd(x)
 
         x1, _ = self.edge_graph_conv_block1(x, pos)
@@ -58,9 +60,9 @@ class DilatedToothSegmentationNetwork(nn.Module):
         x = torch.cat([x1, x2, x3], dim=2)
         x = self.local_hidden_layer(x)
 
-        x1, _ = self.dilated_edge_graph_conv_block1(x, pos)
-        x2, _ = self.dilated_edge_graph_conv_block2(x1, pos)
-        x3, _ = self.dilated_edge_graph_conv_block3(x2, pos)
+        x1, _ = self.dilated_edge_graph_conv_block1(x, pos, cd=cd)
+        x2, _ = self.dilated_edge_graph_conv_block2(x1, pos, cd=cd)
+        x3, _ = self.dilated_edge_graph_conv_block3(x2, pos, cd=cd)
 
         x = torch.cat([x, x1, x2, x3], dim=2)
         x = self.global_hidden_layer(x)
