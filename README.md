@@ -18,15 +18,15 @@ You can either use this repository to train the model from scratch using the Tee
 Example usage:
 ```python
 import torch
-from models.dilatedtoothsegnet import DilatedToothSegmentationNetwork
+from models.dilated_tooth_seg_network import DilatedToothSegmentationNetwork
 
 # Create the model
-model = DilatedToothSegmentationNetwork(num_classes=17, feature_dim=24)
+model = DilatedToothSegmentationNetwork(num_classes=17, feature_dim=24).cuda()
 # dummy input
-pos = torch.rand(2, 2048, 3) # xyz coordinates of the points. Shape: (batch_size, num_points, 3)
-x = torch.rand(2, 2048, 24) # features of the points. Shape: (batch_size, num_points, feature_dim)
+pos = torch.rand(2, 2048, 3).cuda() # xyz coordinates of the points. Shape: (batch_size, num_points, 3)
+x = torch.rand(2, 2048, 24).cuda() # features of the points. Shape: (batch_size, num_points, feature_dim)
 
-out = model(pos, x)
+out = model(x, pos)
 print(out.shape) # Shape: (batch_size, num_points, num_classes)
 ```
 
