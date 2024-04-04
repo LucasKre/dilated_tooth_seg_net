@@ -3,8 +3,8 @@
 <img src="images/image18.gif" width="300"/> <img src="images/image20.gif" width="300"/> 
 
 This repository contains the code for the journal paper: <br>
-*DilatedToothSegNet: Tooth Segmentation Network on 3D Dental Meshes Through Increasing Receptive Vision <br>
-Authors: Lucas Krenmayr, Reinhold von Schwerin, Daniel Schaudt, Pascal Riedel, Alexander Hafner* <br>
+**DilatedToothSegNet: Tooth Segmentation Network on 3D Dental Meshes Through Increasing Receptive Vision <br>
+Authors: Lucas Krenmayr, Reinhold von Schwerin, Daniel Schaudt, Pascal Riedel, Alexander Hafner** <br>
 This paper is published in the Journal of Imaging Informatics in Medicine (JIIM) and can be accessed [here](https://link.springer.com/article/10.1007/s10278-024-01061-6).
 
 <img src="images/graphical_abstract.jpg" width="700"/> 
