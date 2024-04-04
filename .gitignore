@@ -6,7 +6,7 @@
 lightning_logs/
 tensorboard_logs/
 logs/
-data/
+data/*
 *.npz
 *.ipynb
 *.pyc
