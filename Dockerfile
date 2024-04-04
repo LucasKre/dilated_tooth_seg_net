@@ -1,6 +1,6 @@
-FROM nvidia/cuda:11.6.0-base-ubuntu20.04
+FROM nvidia/cuda:12.1.0-devel-ubuntu20.04
 
-ENV TZ=Europe/Minsk
+ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Set bash as the default shell
@@ -9,37 +9,35 @@ ENV SHELL=/bin/bash
 # Create a working directory
 WORKDIR /app/
 
+# Add the deadsnakes PPA for Python 3.10
+RUN apt-get update && apt-get install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa
 # Build with some basic utilities
 RUN apt-get update && apt-get install -y \
-    python3-pip \
+    python3.10 \
+    python3.10-distutils \
+    python3.10-dev \
+    python3.10-venv \
     apt-utils \
-    vim \
+    wget \
     git
 
+# Update alternatives to set python3 to point to python3.10
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+
 # alias python='python3'
-RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python3.10 /usr/bin/python
 
-RUN apt-get install -y python3-opengl
+RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py
 
-RUN pip install torch==1.13.0+cu116 torchvision==0.14.0+cu116 torchaudio==0.13.0 --extra-index-url https://download.pytorch.org/whl/cu116
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
-RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-1.13.0+cu116.html
-RUN pip install torch-sparse -f https://data.pyg.org/whl/torch-1.13.0+cu116.html
-RUN pip install torch-cluster -f https://data.pyg.org/whl/torch-1.13.0+cu116.html
-
-RUN pip install pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu116_pyt1130/download.html
-
-RUN pip install torch-geometric
-
-RUN apt-get install -y libboost-dev
-RUN apt-get install -y python3-opengl
-
-COPY requirements.txt requirements.txt
+COPY requirements.txt /app/
 
 RUN pip install -r requirements.txt
 
+RUN pip install ninja
 
-RUN mkdir workdir
 
 CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--allow-root", "--no-browser"]
-EXPOSE 8888 6007
+EXPOSE 8888
+EXPOSE 6006

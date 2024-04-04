@@ -1,0 +1,5 @@
+Metadata-Version: 2.1
+Name: pointnet2_ops
+Version: 3.0.0
+Author: Erik Wijmans
+Requires-Dist: torch>=1.4

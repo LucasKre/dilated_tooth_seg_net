@@ -14,4 +14,7 @@ experiment_config/
 *.stl
 *.obj
 *.exports
+pointnet2_ops_lib/build
+pointnet2_ops_lib/dist
+pointnet2_ops_lib.egg-info
 
