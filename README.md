@@ -1,4 +1,4 @@
-# DilatedToothSegNet: Tooth Segmentation Network on 3D Dental Meshes Through Increasing Receptive Vision*
+# DilatedToothSegNet: Tooth Segmentation Network on 3D Dental Meshes Through Increasing Receptive Vision
 
 <img src="images/image18.gif" width="300"/> <img src="images/image20.gif" width="300"/> 
 
@@ -152,7 +152,8 @@ Krenmayr, L., von Schwerin, R., Schaudt, D. et al. DilatedToothSegNet: Tooth Seg
   journal={Journal of Imaging Informatics in Medicine},
   pages={1--17},
   year={2024},
-  publisher={Springer}
+  publisher={Springer},
+  doi={10.1007/s10278-024-01061-6}
 }
 
 
