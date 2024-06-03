@@ -131,6 +131,22 @@ Options:
 ```--train_test_split <number>```: The option for train/test split. Either 1 or 2. Default is 1. <br>
 ```--ckpt <path>```: The path to a checkpoint to evaluate. <br>
 
+### Inferencing
+To use the model for inferencing on a single instance of the data set, run the following command with the desired options. The checkpoint path should be the path to the checkpoint to use for inferencing.
+The predicted and ground truth color-coded meshes will be saved in the output directory as .ply files. You can visualize the results using MeshLab or other 3D mesh like [https://3dviewer.net/](https://3dviewer.net/).
+```bash
+python visualize_example.py --ckpt <path_to_checkpoint> --out_dir output --n_bit_precision 16 --use_gpu  --train_test_split 1 --data_idx 0
+```
+
+Options: 
+  
+  ```--ckpt <path>```: The path to a checkpoint to use for inferencing. <br>
+  ```--out_dir <path>```: The directory to save the output to. Default is output. <br>
+  ```--n_bit_precision <number>```: The precision. Default is 16. <br>
+  ```--use_gpu```: Use this flag to use the GPU for inferencing. <br>
+  ```--train_test_split <number>```: The option for train/test split. Either 1 or 2. Default is 1. <br>
+  ```--data_idx <number>```: The index of the data to use for inferencing. Default is 0. <br>
+
 
 ## Special Thanks
 The code in this repository is based on the following repositories:

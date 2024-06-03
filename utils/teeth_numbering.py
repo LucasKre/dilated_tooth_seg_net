@@ -88,14 +88,9 @@ _teeth_codes_upper = {
 _gum = (0, 'gum')
 
 
-def plot_teeth_numbering(img_path: str = None) -> None:
-    img_path = 'images/teeth_numbering_color_code.PNG' if img_path is None else img_path
-    img = mpimg.imread(img_path)
-    plt.imshow(img)
-    plt.show()
-
 
 def color_mesh(mesh: trimesh, labels: np.ndarray) -> trimesh:
+    mesh = mesh.copy()
     colors = label_to_colors(labels)
     mesh.visual.face_colors = colors
     return mesh

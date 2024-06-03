@@ -9,7 +9,7 @@ from torch.utils.data.dataset import Dataset
 
 from dataset.mesh_dataset import Teeth3DSDataset
 from dataset.preprocessing import *
-from models.dilated_tooth_seg_network import LitDilatedToothSegmentationNetwork, Dita
+from models.dilated_tooth_seg_network import LitDilatedToothSegmentationNetwork
 
 SEED = 42
 torch.manual_seed(SEED)

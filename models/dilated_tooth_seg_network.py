@@ -16,30 +16,30 @@ class DilatedToothSegmentationNetwork(nn.Module):
 
         self.stnkd = STNkd(k=24)
 
-        self.edge_graph_conv_block1 = EdgeGraphConvBlock(in_channels=feature_dim, out_channels=48, k=32,
-                                                         hidden_channels=48,
+        self.edge_graph_conv_block1 = EdgeGraphConvBlock(in_channels=feature_dim, out_channels=24, k=32,
+                                                         hidden_channels=24,
                                                          edge_function="local_global")
-        self.edge_graph_conv_block2 = EdgeGraphConvBlock(in_channels=48, out_channels=48, k=32,
-                                                         hidden_channels=48,
+        self.edge_graph_conv_block2 = EdgeGraphConvBlock(in_channels=24, out_channels=24, k=32,
+                                                         hidden_channels=24,
                                                          edge_function="local_global")
-        self.edge_graph_conv_block3 = EdgeGraphConvBlock(in_channels=48, out_channels=48, k=32,
-                                                         hidden_channels=48,
+        self.edge_graph_conv_block3 = EdgeGraphConvBlock(in_channels=24, out_channels=24, k=32,
+                                                         hidden_channels=24,
                                                          edge_function="local_global")
 
-        self.local_hidden_layer = BasicPointLayer(in_channels=48 * 3, out_channels=256)
+        self.local_hidden_layer = BasicPointLayer(in_channels=24 * 3, out_channels=60)
 
-        self.dilated_edge_graph_conv_block1 = DilatedEdgeGraphConvBlock(in_channels=256, hidden_channels=256,
-                                                                        out_channels=256, k=32,
+        self.dilated_edge_graph_conv_block1 = DilatedEdgeGraphConvBlock(in_channels=60, hidden_channels=60,
+                                                                        out_channels=60, k=32,
                                                                         dilation_k=200, edge_function="local_global")
-        self.dilated_edge_graph_conv_block2 = DilatedEdgeGraphConvBlock(in_channels=256, hidden_channels=256,
-                                                                        out_channels=256, k=32,
+        self.dilated_edge_graph_conv_block2 = DilatedEdgeGraphConvBlock(in_channels=60, hidden_channels=60,
+                                                                        out_channels=60, k=32,
                                                                         dilation_k=900, edge_function="local_global")
-        self.dilated_edge_graph_conv_block3 = DilatedEdgeGraphConvBlock(in_channels=256, hidden_channels=256,
-                                                                        out_channels=256, k=32,
+        self.dilated_edge_graph_conv_block3 = DilatedEdgeGraphConvBlock(in_channels=60, hidden_channels=60,
+                                                                        out_channels=60, k=32,
                                                                         dilation_k=1800, edge_function="local_global")
 
 
-        self.global_hidden_layer = BasicPointLayer(in_channels=256 * 4, out_channels=1024)
+        self.global_hidden_layer = BasicPointLayer(in_channels=60 * 4, out_channels=1024)
 
         self.feature_importance = PointFeatureImportance(in_channels=1024)
 
@@ -133,13 +133,16 @@ class LitDilatedToothSegmentationNetwork(L.LightningModule):
     def predict_labels(self, data):
         with torch.autocast(device_type="cuda" if self.device.type == "cuda" else "cpu"):
             with torch.no_grad():
-                pos, x, y, offset = data
-                x = x.float().unsqueeze(0).to(self.device)
+                pos, x, y = data
                 pos = pos.unsqueeze(0).to(self.device)
-                pred, offset = self.model(x, pos)
-                labels = torch.argmax(pred, dim=2).squeeze(0)
-                offset = offset.squeeze(0)
-        return labels, offset
+                x = x.unsqueeze(0).to(self.device)
+                B, N, C = x.shape
+                x = x.float()
+                y = y.view(B, N).float()
+                pred = self.model(x, pos)
+                pred = pred.transpose(2, 1)
+                pred = torch.argmax(pred, dim=1)
+                return pred.squeeze()
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3, betas=(0.9, 0.999), weight_decay=1e-5)
