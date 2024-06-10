@@ -27,10 +27,6 @@ random.seed(SEED)
 seed_everything(SEED, workers=True)
 
 
-def get_model():
-    return LitDilatedToothSegmentationNetwork()
-
-
 def get_dataset(train_test_split=1) -> Dataset:
 
     test = Teeth3DSDataset("data/3dteethseg", processed_folder=f'processed',
@@ -46,11 +42,10 @@ def infer(ckpt_path, train_test_split=1, data_idx=0, save_mesh=False, out_dir='p
     print(f"Running inference on data index {data_idx} using checkpoint {ckpt_path} with train_test_split {train_test_split}. Use GPU: {use_gpu}")
     test_dataset = get_dataset(train_test_split)
 
-    model = get_model()
+    model = LitDilatedToothSegmentationNetwork.load_from_checkpoint(ckpt_path)
+
     if use_gpu:
         model = model.cuda()
-
-    model = model.load_from_checkpoint(ckpt_path)
 
     data = test_dataset[data_idx]
     triangles = data[1][:, :9].reshape(-1, 3, 3)
