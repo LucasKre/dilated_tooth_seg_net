@@ -110,9 +110,10 @@ class Teeth3DSDataset(Dataset):
         root_mesh_folder = join(self.root, self.raw_folder)
         for root, dirs, files in os.walk(root_mesh_folder):
             for file in files:
-                if file.endswith(".obj"):
+                jsonfile = join(root, file).replace('.obj', '.json')
+                if file.endswith(".obj") and os.path.exists(jsonfile):
                     mesh = trimesh.load(join(root, file))
-                    with open(join(root, file).replace('.obj', '.json')) as f:
+                    with open(jsonfile) as f:
                         data = json.load(f)
                     labels = np.array(data["labels"])
                     labels = labels[mesh.faces]
